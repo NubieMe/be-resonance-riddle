@@ -10,4 +10,9 @@ class quiz extends Model
     use HasFactory;
 
     protected $connection = 'mongodb';
+    protected $fillable = [
+        'question',
+        'answer_true',
+        'answer_false',
+    ];
 }

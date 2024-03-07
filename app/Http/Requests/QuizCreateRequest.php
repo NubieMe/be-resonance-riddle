@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class QuizCreateRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class QuizCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,16 @@ class QuizCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'question' => ['required', 'string'],
+            'answer_true' => ['required', 'string'],
+            'answer_false' => ['required', 'array'],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response([
+            "errors" => $validator->getMessageBag()
+        ], 400));
     }
 }
